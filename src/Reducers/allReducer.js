@@ -1,7 +1,8 @@
-import { GENERATE_TOAST, GET_REQUESTS, REMOVE_TOAST, REQUESTS_ERROR } from "../Actions/types";
+import { GENERATE_TOAST, GET_EVENT_REGIONS, GET_REQUESTS, REMOVE_TOAST, REQUESTS_ERROR } from "../Actions/types";
 
 const intitalState = {
 	requests: null,
+	eventRegions: null,
 	toast: [],
 };
 
@@ -11,6 +12,11 @@ export default function allReducer(state = intitalState, action) {
 			return {
 				...state,
 				requests: action.payload,
+			};
+		case GET_EVENT_REGIONS:
+			return {
+				...state,
+				eventRegions: action.payload.Data,
 			};
 		case GENERATE_TOAST:
 			return {

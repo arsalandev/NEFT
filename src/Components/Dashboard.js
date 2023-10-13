@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { generateToast } from "../Actions/allActions";
 
-const Dashboard = ({ auth: { authResponse }, error: { msg, status }, generateToast }) => {
+const Dashboard = ({ auth: { authResponse, security }, error: { msg, status }, generateToast }) => {
 	return (
 		<>
 			{authResponse ? (
@@ -156,6 +156,24 @@ const Dashboard = ({ auth: { authResponse }, error: { msg, status }, generateToa
 							</a>
 						</Col>
 					</Row>
+					<div className="widget mb-4">
+						<div className="widget-head">Requests</div>
+						<div className="widget-body">
+							<iframe src={security ? security.Data[0].SiloSmartsheetURLRequest : ""} frameBorder="0" height={700} width="100%"></iframe>
+						</div>
+					</div>
+					<div className="widget mb-4">
+						<div className="widget-head">Archive</div>
+						<div className="widget-body">
+							<iframe src={security ? security.Data[0].SiloSmartsheetURLArchive : ""} frameBorder="0" height={700} width="100%"></iframe>
+						</div>
+					</div>
+					<div className="widget mb-4">
+						<div className="widget-head">Silo</div>
+						<div className="widget-body">
+							<iframe src={security ? security.Data[0].SiloSmartsheetURLSilo : ""} frameBorder="0" height={700} width="100%"></iframe>
+						</div>
+					</div>
 				</Fragment>
 			) : (
 				<div className="loader-container">

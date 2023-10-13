@@ -19,25 +19,19 @@ import "./styles.scss";
 import { MsalProvider } from "@azure/msal-react";
 import { EventType, PublicClientApplication } from "@azure/msal-browser";
 import Toast from "./Components/Toast";
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 import { logout } from "./Actions/authActions";
-import { useMsal } from "@azure/msal-react";
-
-
 
 function App() {
 	const [sidebarToggled, setSidebarToggled] = useState(false);
 	const [eventPayload, setEventPayload] = useState(null);
-	const { instance } = useMsal();
 	const [show, setShow] = useState(false);
 	const handleClose = () => {
 		setShow(false);
-		console.log("logout");
-		store.dispatch(logout(instance))
+		store.dispatch(logout(pca));
 	};
 	const handleShow = () => setShow(true);
-
 
 	const pca = new PublicClientApplication({
 		auth: {
@@ -65,16 +59,16 @@ function App() {
 				store.dispatch(getPermissions(localStorage.getItem("token")));
 				store.dispatch(getToolMatrix(localStorage.getItem("token")));
 				let token = localStorage.getItem("token");
-				if(token != null){
-					const decode = JSON.parse(atob(token.split('.')[1]));
-					console.log(decode);
+				if (token != null) {
+					const decode = JSON.parse(atob(token.split(".")[1]));
+					// console.log(decode);
 					if (decode.exp * 1000 < new Date().getTime()) {
-						handleShow()
+						handleShow();
 					} else {
 						console.log("Still Valid");
 					}
 				}
-			}, 1000);			
+			}, 1000);
 		}
 	}, [eventPayload]);
 
@@ -101,8 +95,8 @@ function App() {
 					</div>
 				</div>
 			</div>
-			<Modal show={show}>
-				<Modal.Header>
+			<Modal show={show} centered onHide={() => setShow(false)}>
+				<Modal.Header closeButton>
 					<Modal.Title>Token Expired</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>Please Logout This Session</Modal.Body>
@@ -111,7 +105,7 @@ function App() {
 						Logout
 					</Button>
 				</Modal.Footer>
-			 </Modal>
+			</Modal>
 		</>
 	);
 

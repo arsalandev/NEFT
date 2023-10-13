@@ -17,4 +17,6 @@ export const GET_TOOLMATRIX = "GET_TOOLMATRIX";
 export const GENERATE_TOAST = "GENERATE_TOAST";
 export const REMOVE_TOAST = "REMOVE_TOAST";
 
+export const GET_EVENT_REGIONS = "GET_EVENT_REGIONS";
+
 export const API_ENDPOINT = "http://54.153.92.164:8080/";

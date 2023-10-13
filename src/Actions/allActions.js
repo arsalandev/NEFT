@@ -1,6 +1,6 @@
 import axios from "axios";
 import { returnErrors } from "./errorActions";
-import { GET_REQUESTS, REQUESTS_ERROR, API_ENDPOINT, GENERATE_TOAST, REMOVE_TOAST } from "./types";
+import { GET_REQUESTS, REQUESTS_ERROR, API_ENDPOINT, GENERATE_TOAST, REMOVE_TOAST, GET_EVENT_REGIONS } from "./types";
 
 let toast_body = [];
 
@@ -46,6 +46,75 @@ export const getRequests = (token) => async (dispatch) => {
 			});
 			return true;
 		}
+	} catch (err) {
+		dispatch({
+			type: REQUESTS_ERROR,
+		});
+		if (!err.response) {
+			dispatch(returnErrors("Network Error", 502, "NETWORK_ERROR"));
+		} else if (err.response.status === 401) {
+			dispatch(generateToast("fail", "Unauthorized"));
+		} else {
+			dispatch(returnErrors(err.response.data, err.response.status));
+			dispatch(generateToast("fail", err.response.data.Status));
+		}
+
+		return false;
+	}
+};
+
+export const getEventRegions = (token) => async (dispatch) => {
+	const body = {
+		callersilo: 10000049,
+		callerregion: 10000001,
+		region: 10000001,
+	};
+	const config = {
+		headers: {
+			"Content-type": "application/json",
+			Authorization: `Bearer ${token}`,
+		},
+	};
+	try {
+		const resp = await axios.post(API_ENDPOINT + "api/v/1/regionevents", body, config);
+		if (resp.status === 200) {
+			dispatch({
+				type: GET_EVENT_REGIONS,
+				payload: resp.data,
+			});
+			return true;
+		}
+	} catch (err) {
+		dispatch({
+			type: REQUESTS_ERROR,
+		});
+		if (!err.response) {
+			dispatch(returnErrors("Network Error", 502, "NETWORK_ERROR"));
+		} else if (err.response.status === 401) {
+			dispatch(generateToast("fail", "Unauthorized"));
+		} else {
+			dispatch(returnErrors(err.response.data, err.response.status));
+			dispatch(generateToast("fail", err.response.data.Status));
+		}
+
+		return false;
+	}
+};
+
+export const requestEvent = (form, token) => async (dispatch) => {
+	const config = {
+		headers: {
+			"Content-type": "application/json",
+			Authorization: `Bearer ${token}`,
+		},
+	};
+	try {
+		const resp = await axios.post(API_ENDPOINT + `api/v/2/requestevent`, form, config);
+		if (resp.status === 200) {
+			dispatch(generateToast("success", "Form Submitted Successfully!"));
+			return true;
+		}
+		return false;
 	} catch (err) {
 		dispatch({
 			type: REQUESTS_ERROR,
